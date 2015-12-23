@@ -1,0 +1,4 @@
+AuthType Basic
+AuthName "Auth please"
+AuthUserFile z://home/bulls-cow/www/.htpasswd
+Require valid-user
