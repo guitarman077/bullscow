@@ -14,7 +14,7 @@ class App
         /** @var $controller \Controllers\_Abstract*/
         $controller = static::getController();
 
-        $controller->{static::getAction()}();
+        echo $controller->{static::getAction()}();
     }
 
     /**
@@ -57,6 +57,8 @@ class App
      */
     private static function getAction()
     {
-        return DEFAULT_ACTION . 'Action';
+        $action = isset($_GET[ACTION_PARAM]) ? $_GET[ACTION_PARAM] : DEFAULT_ACTION;
+
+        return $action . 'Action';
     }
 }

@@ -50,13 +50,17 @@ class Game extends _Abstract
           SELECT * FROM ' . static::$_table_name . ' WHERE user_id = ' . $user_id
         );
 
-        $_game = $result->fetch();
+        $game = $result->fetch();
+
+        if (empty($game)) {
+            return false;
+        }
 
         return new static(array(
-            'id' => $_game['id'],
+            'id' => $game['id'],
             'user_id' => $user_id,
-            'status' => $_game['status'],
-            'task' => $_game['task'],
+            'status' => $game['status'],
+            'task' => $game['task'],
         ));
     }
 }

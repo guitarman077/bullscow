@@ -13,7 +13,7 @@ class BullsCow extends _Abstract
      * Начинает новую игру
      *
      * @param $user_id
-     * @return static
+     * @return Game
      */
     public static function initGame($user_id)
     {

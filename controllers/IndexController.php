@@ -10,6 +10,12 @@ use Components\BullsCow;
  */
 class IndexController extends _Abstract {
 
+    /**
+     * Основной метод игры
+     *
+     * @return string
+     * @throws \Exception
+     */
     public function indexAction()
     {
         $tel = $_REQUEST['tel'];
@@ -22,27 +28,46 @@ class IndexController extends _Abstract {
         /** @var $user User*/
         $user = User::getByLogin($tel);
 
-        $params = array();
+        /** @var $game Game */
+        $game = Game::getByUserId($user->id);
 
-        if (strtolower($msg) == "start") { // Пользователь начинает новую игру
-            $game = BullsCow::initGame($user->id);
-
-            if (empty($game)) {
-                throw new \Exception("Game init error ", 404);
-            }
-
-            $view = 'start.php';
-        } else {
-
-            /** @var $game Game */
-            $game = Game::getByUserId($user->id);
-
-            $params['results'] = BullsCow::processAnswer($game, $msg);
-
-            $view = 'index.php';
+        if(empty($game)) {
+            throw new \Exception("Game not initialized", 404);
         }
 
-        echo $this->render('index/' . $view, $params);
+        /** @var $results Array результаты ответа*/
+        $results = BullsCow::processAnswer($game, $msg);
+
+        return $this->render('index/index.php', array(
+            'results' => $results
+        ));
+    }
+
+    /**
+     * Требуется для иницилизации новой игры
+     *
+     * @return string
+     * @throws \Exception
+     */
+    public function startAction()
+    {
+        $tel = $_REQUEST['tel'];
+
+        if (empty($tel)) {
+            throw new \Exception("Invalid http request", 404);
+        }
+
+        /** @var $user User*/
+        $user = User::getByLogin($tel);
+
+        /** @var  $game */
+        $game = BullsCow::initGame($user->id);
+
+        if (empty($game)) {
+            throw new \Exception("Game init error ", 404);
+        }
+
+        return $this->render('index/start.php');
     }
 
 }
